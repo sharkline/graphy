@@ -23,12 +23,12 @@ def _write_to_file(links):
     with open(filename, 'w') as outf:
         outf.write('\n'.join([topic for topic in links]))
 
-def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10):
+def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10, retry=3):
     """
     Fetch the links of a given url, used to grab links for further
     scraping
     """
-    if runs:
+    if runs and retry:
         data = urllib2.urlopen(url).read()
 
         asoif_links = []
@@ -49,11 +49,12 @@ def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10):
                         reddit_links.append(current_topic)
                     elif '?count' in current_topic:
                         _write_to_file(reddit_links)
-                        runs = runs - 1
+                        runs -= 1
                         try:
                             fetch_links(url=current_topic, runs=runs)
                         except:
-                            fetch_links(url=current_topic, runs=runs)
+                            retry -= 1
+                            fetch_links(url=current_topic, runs=runs, retry=retry)
 
 if __name__ == '__main__':
     fetch_links()
