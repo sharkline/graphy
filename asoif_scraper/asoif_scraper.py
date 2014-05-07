@@ -38,6 +38,8 @@ def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10):
         for topic in all_topics:
             asoif_links.append(topic)
 
+        # Ugh...once this works refactor into something more
+        # sane
         reddit_links = []
         for topic in bs.findAll('a'):
             current_topic = topic.get('href', None)
@@ -48,7 +50,10 @@ def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10):
                     elif '?count' in current_topic:
                         _write_to_file(reddit_links)
                         runs = runs - 1
-                        fetch_links(url=current_topic, runs=runs)
+                        try:
+                            fetch_links(url=current_topic, runs=runs)
+                        except:
+                            fetch_links(url=current_topic, runs=runs)
 
 if __name__ == '__main__':
     fetch_links()
