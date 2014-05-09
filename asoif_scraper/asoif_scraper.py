@@ -9,8 +9,11 @@ import re
 import sys
 import click
 import urllib2
+import logging
 import BeautifulSoup
 from datetime import datetime
+
+log = logging.basicConfig(__name__)
 
 def _write_to_file(links):
     """
