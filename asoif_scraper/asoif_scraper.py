@@ -15,24 +15,31 @@ from datetime import datetime
 
 log = logging.basicConfig(__name__)
 
-def _write_to_file(links):
+def _write_to_file(links, name=None):
     """
     Helper method, write the list to a file seperated by
     new lines
     """
     now = datetime.now()
-    str_now = now.strftime('%Y_%m_%d')
+    if name is None:
+        str_now = now.strftime('%Y_%m_%d')
+    else:
+        str_now = '_'.join([name, strftime('%Y_%m_%d')])
     filename = '_'.join([str_now, 'asoif_dump.txt'])
     with open(filename, 'w') as outf:
         outf.write('\n'.join([topic for topic in links]))
 
 def get_comments(urls):
+    """
+    Helper method, grab the comments and write to file
+    """
     comments = []
     for url in urls:
         data = urllib2.urlopen(url).read()
         bs = BeautifulSoup.BeautifulSoup(data)
         page_comments = bs.findAll('p')
         comments.append(page_comments)
+    write_to_file(comments, 'comment')
     return comments
 
 def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10, retry=3):
