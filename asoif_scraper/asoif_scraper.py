@@ -26,6 +26,15 @@ def _write_to_file(links):
     with open(filename, 'w') as outf:
         outf.write('\n'.join([topic for topic in links]))
 
+def get_comments(urls):
+    comments = []
+    for url in urls:
+        data = urllib2.urlopen(url).read()
+        bs = BeautifulSoup.BeautifulSoup(data)
+        page_comments = bs.findAll('p')
+        comments.append(page_comments)
+    return comments
+
 def fetch_links(url='http://www.reddit.com/r/asoiaf', runs=10, retry=3):
     """
     Fetch the links of a given url, used to grab links for further
